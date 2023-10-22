@@ -1,8 +1,15 @@
 import { useState } from 'react';
 import css from './form.module.css';
-const Form = ({ onSubmit, contacts }) => {
+import { useDispatch, useSelector } from 'react-redux';
+import { nanoid } from '@reduxjs/toolkit';
+import { addContact } from 'components/redux/phonebook/slice';
+import { selectContacts } from 'components/redux/phonebook/selectors';
+const Form = () => {
   const [name, setName] = useState('');
   const [number, setNumber] = useState('');
+
+  const dispatch = useDispatch();
+  const contacts = useSelector(selectContacts);
 
   // Перевірка валідності введених значень в поля вводу за допомогою RegExp
   const isValidName = data => {
@@ -32,8 +39,17 @@ const Form = ({ onSubmit, contacts }) => {
       alert(`Contact with name "${name}" already exists.`);
       return;
     }
-    // Виклик функції додавання контакта в state app
-    onSubmit(name, number);
+
+    // Створення об'єкту контакта
+    const contact = {
+      id: nanoid(),
+      name,
+      number,
+    };
+
+    // Виклик функції додавання контакта в store
+    dispatch(addContact(contact));
+
     // Очищаємо поля вводу
     reset();
   };
