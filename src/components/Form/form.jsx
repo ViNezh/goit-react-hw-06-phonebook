@@ -4,6 +4,19 @@ import { useDispatch, useSelector } from 'react-redux';
 import { nanoid } from '@reduxjs/toolkit';
 import { addContact } from 'components/redux/phonebook/slice';
 import { selectContacts } from 'components/redux/phonebook/selectors';
+
+// Перевірка валідності введених значень в поля вводу за допомогою RegExp
+const isValidName = data => {
+  const patternName =
+    /^[a-zA-Zа-яА-Я]+(([' -][a-zA-Zа-яА-Я ])?[a-zA-Zа-яА-Я]*)*$/;
+  return patternName.test(data);
+};
+const isValidNumber = data => {
+  const patternNumber =
+    /^(\+{0,})(\d{0,})([(]{1}\d{1,3}[)]{0,}){0,}(\s?\d+|\+\d{2,3}\s{1}\d+|\d+){1}[\s|-]?\d+([\s|-]?\d+){1,2}(\s){0,}$/gm;
+  return patternNumber.test(data);
+};
+
 const Form = () => {
   const [name, setName] = useState('');
   const [number, setNumber] = useState('');
@@ -11,17 +24,6 @@ const Form = () => {
   const dispatch = useDispatch();
   const contacts = useSelector(selectContacts);
 
-  // Перевірка валідності введених значень в поля вводу за допомогою RegExp
-  const isValidName = data => {
-    const patternName =
-      /^[a-zA-Zа-яА-Я]+(([' -][a-zA-Zа-яА-Я ])?[a-zA-Zа-яА-Я]*)*$/;
-    return patternName.test(data);
-  };
-  const isValidNumber = data => {
-    const patternNumber =
-      /^(\+{0,})(\d{0,})([(]{1}\d{1,3}[)]{0,}){0,}(\s?\d+|\+\d{2,3}\s{1}\d+|\d+){1}[\s|-]?\d+([\s|-]?\d+){1,2}(\s){0,}$/gm;
-    return patternNumber.test(data);
-  };
   // Функція обробки відправки форми
   const handleSubmit = evt => {
     // Відміняємо дії браузера за замовчуванням
